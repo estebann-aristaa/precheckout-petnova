@@ -32,7 +32,6 @@ html,body{
   overflow-x:hidden;
 }
 
-/* ── AURORA CANVAS ── */
 #auroraCanvas{
   position:fixed;
   top:0;left:0;
@@ -42,7 +41,6 @@ html,body{
   opacity:0.7;
 }
 
-/* ── LAYOUT ── */
 .page{
   position:relative;
   z-index:1;
@@ -53,7 +51,6 @@ html,body{
   padding:0 16px 60px;
 }
 
-/* ── CARD ── */
 .card{
   width:100%;
   max-width:500px;
@@ -66,7 +63,6 @@ html,body{
   to{opacity:1;transform:translateY(0);}
 }
 
-/* ── LOGO ── */
 .logo-area{
   display:flex;
   align-items:center;
@@ -91,7 +87,6 @@ html,body{
   color:var(--text);
 }
 
-/* ── BADGE ── */
 .badge{
   display:inline-flex;
   align-items:center;
@@ -108,7 +103,6 @@ html,body{
   margin-bottom:16px;
 }
 
-/* ── HEADLINE ── */
 .headline{
   font-family:'Playfair Display',serif;
   font-size:clamp(24px,5vw,32px);
@@ -130,7 +124,6 @@ html,body{
   margin-right:auto;
 }
 
-/* ── PRODUCT CARD ── */
 .product-box{
   background:rgba(255,255,255,0.03);
   border:1px solid var(--border-bright);
@@ -150,15 +143,35 @@ html,body{
   height:2px;
   background:linear-gradient(90deg,transparent,var(--teal),transparent);
 }
+
+/* ── PRODUCT IMAGE — libro real ── */
 .product-img{
-  width:72px;height:72px;
-  border-radius:12px;
-  background:var(--bg3);
-  border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  font-size:32px;
+  width:72px;
+  height:88px;
+  border-radius:10px;
+  overflow:hidden;
+  border:1px solid var(--border-bright);
+  box-shadow:0 4px 20px rgba(20,184,166,0.2);
   flex-shrink:0;
+  background:var(--bg3);
 }
+.product-img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+/* fallback si no carga la imagen */
+.product-img .img-fallback{
+  display:none;
+  width:100%;
+  height:100%;
+  align-items:center;
+  justify-content:center;
+  font-size:32px;
+}
+.product-img img.error + .img-fallback{display:flex;}
+
 .product-info{flex:1;}
 .product-name{
   font-weight:700;
@@ -183,7 +196,6 @@ html,body{
   letter-spacing:0.5px;
 }
 
-/* ── SECTION TITLE ── */
 .section-label{
   color:var(--text-dim);
   font-size:10px;
@@ -193,7 +205,6 @@ html,body{
   margin-bottom:12px;
 }
 
-/* ── INCLUDES ── */
 .includes{margin-bottom:20px;}
 .inc-item{
   display:flex;
@@ -214,14 +225,12 @@ html,body{
 }
 .inc-txt b{color:var(--text);font-weight:600;}
 
-/* ── DIVIDER ── */
 .divider{
   border:none;
   border-top:1px solid rgba(255,255,255,0.06);
   margin:20px 0;
 }
 
-/* ── BONOS ── */
 .bonos{margin-bottom:20px;}
 .bono-item{
   display:flex;
@@ -252,7 +261,6 @@ html,body{
   white-space:nowrap;
 }
 
-/* ── TOTAL BOX ── */
 .total-box{
   background:rgba(20,184,166,0.06);
   border:1px solid var(--border-bright);
@@ -280,7 +288,6 @@ html,body{
   border-top:1px solid rgba(255,255,255,0.05);
 }
 
-/* ── CTA BUTTON ── */
 .cta-btn{
   width:100%;
   background:var(--teal);
@@ -330,7 +337,6 @@ html,body{
   font-weight:400;
 }
 
-/* ── TRUST STRIP ── */
 .trust{
   display:flex;
   justify-content:center;
@@ -346,7 +352,6 @@ html,body{
   gap:5px;
 }
 
-/* ── GUARANTEE ── */
 .guarantee{
   display:flex;
   align-items:center;
@@ -359,8 +364,6 @@ html,body{
 .guarantee-icon{font-size:40px;flex-shrink:0;}
 .guarantee-txt{color:var(--text-muted);font-size:12px;line-height:1.6;}
 .guarantee-txt b{color:var(--text);font-weight:600;}
-
-/* ── PAWS CURSOR ── */
 </style>
 </head>
 <body>
@@ -385,9 +388,16 @@ html,body{
     <h1 class="headline">Estás a un paso de<br><span class="accent">transformar la vida de tu gato</span></h1>
     <p class="subline">Revisa lo que incluye tu acceso antes de completar el pago. Todo listo para ti.</p>
 
-    <!-- PRODUCT -->
+    <!-- PRODUCT — imagen real del libro -->
     <div class="product-box">
-      <div class="product-img">🐱</div>
+      <div class="product-img">
+        <img
+          src="https://petnovagatos.com/logogatosebook.png"
+          alt="Lo Que Haces Mal Con Tu Gato"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+        >
+        <div class="img-fallback">📖</div>
+      </div>
       <div class="product-info">
         <div class="product-name">Lo Que Haces Mal Con Tu Gato (Sin Saberlo)</div>
         <div class="product-meta">Acceso digital inmediato · PDF + Videos</div>
@@ -451,7 +461,7 @@ html,body{
 
     <!-- CTA -->
     <button class="cta-btn" onclick="window.open('https://pay.hotmart.com/B98946185F?offDiscount=PETNOVA','_blank')">
-      <span class="cta-main">🐾 QUIERO MI ACCESO AHORA</span>
+      <span class="cta-main">📖 QUIERO MI ACCESO AHORA</span>
       <span class="cta-sub">Clic para completar tu pago seguro en Hotmart →</span>
     </button>
 
@@ -475,7 +485,6 @@ html,body{
 </div>
 
 <script>
-/* ── AURORA CANVAS ── */
 (function(){
   var canvas=document.getElementById('auroraCanvas');
   var ctx=canvas.getContext('2d');
@@ -535,7 +544,6 @@ html,body{
   draw();
 })();
 
-/* ── PAW CURSOR EFFECT ── */
 document.addEventListener('click',function(e){
   var p=document.createElement('div');
   p.textContent='🐾';
