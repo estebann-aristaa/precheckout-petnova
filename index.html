@@ -305,6 +305,34 @@ body {
   .card { padding: 24px 18px 28px; border-radius: 22px; }
   .headline { font-size: 22px; }
 }
+
+/* Custom Cursor */
+@media (min-width: 769px) {
+  body { cursor: none; }
+  #pn-cursor {
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 99999;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 12px rgba(14,184,130,.7);
+    transform: translate(-50%,-50%);
+    transition: transform .1s ease, width .2s ease, height .2s ease, background .2s;
+    mix-blend-mode: screen;
+  }
+  #pn-cursor.hovering {
+    width: 36px; height: 36px;
+    background: rgba(14,184,130,.15);
+    box-shadow: 0 0 20px rgba(14,184,130,.4);
+    border: 1px solid rgba(14,184,130,.5);
+  }
+  .pn-trail {
+    position: fixed; pointer-events: none; z-index: 99998;
+    border-radius: 50%; transform: translate(-50%,-50%);
+    background: var(--teal); mix-blend-mode: screen;
+  }
+  a, button, .cta-btn { cursor: none !important; }
+}
 </style>
 </head>
 <body>
@@ -418,6 +446,68 @@ body {
 </div>
 
 <script>
+/* Custom Cursor */
+(function() {
+  if (/Mobi|Android/i.test(navigator.userAgent)) return;
+  if (window.innerWidth < 769) return;
+  var cursor = document.createElement('div');
+  cursor.id = 'pn-cursor';
+  document.body.appendChild(cursor);
+  var TRAIL = 8, trail = [];
+  for (var i = 0; i < TRAIL; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'pn-trail';
+    var frac = 1 - i/TRAIL;
+    var sz = Math.max(1, frac*6);
+    dot.style.cssText = 'width:'+sz+'px;height:'+sz+'px;opacity:'+(frac*0.35)+';';
+    document.body.appendChild(dot);
+    trail.push({el:dot,x:-100,y:-100});
+  }
+  var mouseX=-100, mouseY=-100;
+  document.addEventListener('mousemove',function(e){mouseX=e.clientX;mouseY=e.clientY;},{passive:true});
+  document.querySelectorAll('a,button,.cta-btn').forEach(function(el){
+    el.addEventListener('mouseenter',function(){cursor.classList.add('hovering');});
+    el.addEventListener('mouseleave',function(){cursor.classList.remove('hovering');});
+  });
+  var cx=-100, cy=-100, trailPositions=Array(TRAIL).fill(0).map(function(){return{x:-100,y:-100};});
+  function animCursor() {
+    cx+=(mouseX-cx)*0.18; cy+=(mouseY-cy)*0.18;
+    cursor.style.left=cx+'px'; cursor.style.top=cy+'px';
+    for(var i=TRAIL-1;i>0;i--){trailPositions[i].x+=(trailPositions[i-1].x-trailPositions[i].x)*0.5;trailPositions[i].y+=(trailPositions[i-1].y-trailPositions[i].y)*0.5;}
+    trailPositions[0].x=cx; trailPositions[0].y=cy;
+    for(var j=0;j<TRAIL;j++){trail[j].el.style.left=trailPositions[j].x+'px';trail[j].el.style.top=trailPositions[j].y+'px';}
+    requestAnimationFrame(animCursor);
+  }
+  animCursor();
+})();
+
+/* Magnetic Button */
+(function() {
+  if (/Mobi|Android/i.test(navigator.userAgent)) return;
+  if (window.innerWidth < 769) return;
+  var STRENGTH = 0.38;
+  var RADIUS = 90;
+  document.querySelectorAll('.cta-btn').forEach(function(btn) {
+    btn.addEventListener('mousemove', function(e) {
+      var rect = btn.getBoundingClientRect();
+      var centerX = rect.left + rect.width / 2;
+      var centerY = rect.top + rect.height / 2;
+      var dx = e.clientX - centerX;
+      var dy = e.clientY - centerY;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < RADIUS) {
+        btn.style.transform = 'translate(' + (dx * STRENGTH).toFixed(1) + 'px,' + (dy * STRENGTH).toFixed(1) + 'px)';
+        btn.style.transition = 'transform 0.1s ease, background 0.2s, border-color 0.2s, box-shadow 0.2s';
+      }
+    });
+    btn.addEventListener('mouseleave', function() {
+      btn.style.transform = '';
+      btn.style.transition = 'transform 0.4s cubic-bezier(.34,1.56,.64,1), background 0.2s, border-color 0.2s, box-shadow 0.2s';
+    });
+  });
+})();
+
+/* Paw Click */
 document.addEventListener('click', function(e){
   var p = document.createElement('div');
   p.textContent = '\uD83D\uDC3E';
